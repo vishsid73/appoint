@@ -1,5 +1,4 @@
 <?php
-$loader = new \Phalcon\Loader();
 
 $app = new Phalcon\Mvc\Micro();
 
