@@ -7,3 +7,8 @@
  */
 
 var wbAppoint = angular.module("wbappoint",[]);
+
+wbAppoint.controller('test', function($scope){
+    $scope.sid = "siddharth";
+
+});
