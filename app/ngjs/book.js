@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var wbClient = angular.module("client",['proglobals']);
+var wbClient = angular.module("client",["proglobals","firebase"]);
 
 angular.module("proglobals",[]).
     factory("global", [function($log){
@@ -17,27 +17,52 @@ angular.module("proglobals",[]).
         return this.global;
     }]);
 
-//for rest url encoded parameters
-wbClient.config(function ($httpProvider) {
-    $httpProvider.defaults.transformRequest = function (data) {
-        var str = [];
-        for (var p in data) {
-            data[p] !== undefined && str.push(encodeURIComponent(p) + '=' + encodeURIComponent(data[p]));
-        }
-        return str.join('&');
-    };
-    $httpProvider.defaults.headers.put['Content-Type'] = $httpProvider.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded; charset=UTF-8';
-});
 
+// a factory to create a re-usable Profile object
+// we pass in a username and get back their synchronized data as an object
+wbClient.factory("Profile", ["$firebase", function($firebase) {
+    return function(curdate) {
+        // create a reference to the user's profile
+        var reff = new Firebase("https://wbappoint.firebaseio.com/").child(curdate);
 
+        // return it as a synchronized object
+        return $firebase(reff).$asObject();
+    }
+}]);
 
+wbClient.controller("ProfileCtrl", ["$scope", "Profile",
+    function($scope, Profile) {
+        // create a 3-way binding to our Profile as $scope.profile
+        Profile("physicsmarie").$bindTo($scope, "profile");
+    }
+]);
 
+wbClient.controller("bookCtrl", function($scope,$firebase,global,$http, $log,Profile){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
 
-wbClient.controller("bookCtrl", function($scope,global,$http, $log){
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+    var today = yyyy+'-'+mm+'-'+dd;
+
+    //var today = "2014-08-24";
+
     $scope.name;
     $scope.mobile;
     $scope.date;
-    $scope.curtoken;
+
+    Profile(today).$bindTo($scope, "profile");
+
+
+    var ref = new Firebase("https://wbappoint.firebaseio.com/");
+    var sync = $firebase(ref);
+
     $scope.book = function(){
         $http({
             url: global.apiurl+"book",
@@ -45,7 +70,8 @@ wbClient.controller("bookCtrl", function($scope,global,$http, $log){
             data: {'name': $scope.name, 'mobile': $scope.mobile, 'date': $scope.date}
         })
             .success(function (data, status, headers, config) {
-                   $scope.curtoken = data.result;
+                   //$scope.curtoken = data.result;
+                   sync.$update($scope.date, {total: data.total});
             })
             .error(function (data, status, headers, config) {
                 $log.log(status);
