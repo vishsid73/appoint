@@ -110,7 +110,7 @@ article { text-align: left; }
 .navigation { background: #fafafa; z-index: 2; }
 .navigation-brand { float: left; }
 .navigation-brand:after { content: ''; display: table; }
-.navigation-brand .brand-logo  { width:215px; height:50px; }
+.navigation-brand .brand-logo  { width:310px; height:50px; }
 .navigation-brand .brand-logo .logo { display:block; height: 30px; background:url(../img/logo.png) center center no-repeat; }
 .fixmenu-clone .brand-logo .logo { background:url(../img/logo-inverted.png) center center no-repeat; }
 .navigation-brand .brand-logo h4 { margin-top:15px; }
