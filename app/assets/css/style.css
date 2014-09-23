@@ -125,7 +125,7 @@ body.lock {
 }
 
 .logo-brand {
-    width: 250px;
+    width: 310px;
     height: 60px;
     position: absolute;
     right: 0;
@@ -134,13 +134,16 @@ body.lock {
     font-weight: 700;
     padding: 0;
     text-align: center;
-    background: #242A34;
+    background: #313940;
+    /*background: #242A34;*/
     color: #fff;
 }
 
 .logo-brand img {
     width: auto;
-    max-width: 160px;
+    max-width: 310px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
 .logo-brand.white-color {
